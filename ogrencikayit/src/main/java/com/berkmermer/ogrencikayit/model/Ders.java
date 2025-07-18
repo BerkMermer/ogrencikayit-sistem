@@ -16,14 +16,12 @@ public class Ders {
     @ManyToMany(mappedBy = "dersler", fetch = FetchType.LAZY)
     private List<Ogrenci> ogrenciler;
 
-    // Constructors
     public Ders() {}
     
     public Ders(String dersAdi) {
         this.dersAdi = dersAdi;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getDersAdi() { return dersAdi; }

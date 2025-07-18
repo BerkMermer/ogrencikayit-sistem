@@ -24,7 +24,6 @@ public class Ogrenci {
     )
     private List<Ders> dersler;
 
-    // Constructors
     public Ogrenci() {}
     
     public Ogrenci(String ad, String soyad) {
@@ -32,7 +31,6 @@ public class Ogrenci {
         this.soyad = soyad;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getAd() { return ad; }
