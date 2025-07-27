@@ -21,31 +21,49 @@ public class OgrenciDao {
             o.setId(rs.getLong("id"));
             o.setAd(rs.getString("ad"));
             o.setSoyad(rs.getString("soyad"));
+            o.setOgrenciNo(rs.getString("ogrenci_no"));
+            o.setEmail(rs.getString("email"));
+            o.setTelefon(rs.getString("telefon"));
             return o;
         }
     };
 
     public List<Ogrenci> findAll() {
-        return jdbcTemplate.query("SELECT * FROM ogrenci", rowMapper);
+        return jdbcTemplate.query("SELECT * FROM ogrenciler", rowMapper);
     }
 
     public Ogrenci findById(Long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM ogrenci WHERE id = ?", rowMapper, id);
+        return jdbcTemplate.queryForObject("SELECT * FROM ogrenciler WHERE id = ?", rowMapper, id);
     }
 
     public void save(Ogrenci ogrenci) {
-        jdbcTemplate.update("INSERT INTO ogrenci (ad, soyad) VALUES (?, ?)", ogrenci.getAd(), ogrenci.getSoyad());
+        jdbcTemplate.update("INSERT INTO ogrenciler (ad, soyad, ogrenci_no, email, telefon) VALUES (?, ?, ?, ?, ?)", 
+            ogrenci.getAd(), ogrenci.getSoyad(), ogrenci.getOgrenciNo(), ogrenci.getEmail(), ogrenci.getTelefon());
     }
 
     public void update(Ogrenci ogrenci) {
-        jdbcTemplate.update("UPDATE ogrenci SET ad = ?, soyad = ? WHERE id = ?", ogrenci.getAd(), ogrenci.getSoyad(), ogrenci.getId());
+        jdbcTemplate.update("UPDATE ogrenciler SET ad = ?, soyad = ?, ogrenci_no = ?, email = ?, telefon = ? WHERE id = ?", 
+            ogrenci.getAd(), ogrenci.getSoyad(), ogrenci.getOgrenciNo(), ogrenci.getEmail(), ogrenci.getTelefon(), ogrenci.getId());
     }
 
     public void updateAd(Long id, String yeniAd) {
-        jdbcTemplate.update("UPDATE ogrenci SET ad = ? WHERE id = ?", yeniAd, id);
+        jdbcTemplate.update("UPDATE ogrenciler SET ad = ? WHERE id = ?", yeniAd, id);
     }
 
     public void delete(Long id) {
-        jdbcTemplate.update("DELETE FROM ogrenci WHERE id = ?", id);
+        // Önce kayıtları sil (eğer kayıt tablosu varsa)
+        try {
+            jdbcTemplate.update("DELETE FROM kayitlar WHERE ogrenci_id = ?", id);
+        } catch (Exception e) {
+            // Kayıt tablosu yoksa devam et
+        }
+        // Sonra notları sil
+        try {
+            jdbcTemplate.update("DELETE FROM notlar WHERE ogrenci_id = ?", id);
+        } catch (Exception e) {
+            // Not tablosu yoksa devam et
+        }
+        // En son öğrenciyi sil
+        jdbcTemplate.update("DELETE FROM ogrenciler WHERE id = ?", id);
     }
 } 

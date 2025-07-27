@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    image: ogrenci-kayit:latest
+    container_name: ogrenci-kayit-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_H2_CONSOLE_ENABLED=true
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  ogrenci-network:
+    driver: bridge 
