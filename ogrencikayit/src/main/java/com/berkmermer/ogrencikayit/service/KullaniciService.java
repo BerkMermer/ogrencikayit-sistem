@@ -24,6 +24,10 @@ public class KullaniciService {
         return Optional.empty();
     }
 
+    public Optional<Kullanici> findByKullaniciAdi(String kullaniciAdi) {
+        return kullaniciDao.findByKullaniciAdi(kullaniciAdi);
+    }
+
     public Kullanici kayitOl(Kullanici kullanici) {
         kullanici.setSifre(passwordEncoder.encode(kullanici.getSifre()));
         kullanici.setAktif(true);

@@ -38,7 +38,6 @@ public class NotTest {
         not.setVize(70.0);
         not.setFinalNotu(80.0);
         
-        // Manuel ortalama hesaplama
         double beklenenOrtalama = (70.0 * 0.4) + (80.0 * 0.6);
         not.setOrtalama(beklenenOrtalama);
         

@@ -12,7 +12,10 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import axios from '../utils/axios';
 
 export default function OgrenciDashboard() {
   const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -23,18 +26,29 @@ export default function OgrenciDashboard() {
   const [profilMsg, setProfilMsg] = useState('');
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [stats, setStats] = useState([
+    { label: 'Kayıtlı Dersler', value: 0, color: '#1976d2' },
+    { label: 'Toplam Ders', value: 0, color: '#388e3c' },
+    { label: 'Ortalama Not', value: 0, color: '#fbc02d', textColor: '#333' },
+  ]);
 
-  // Kayıtlı dersler ve notlar
   useEffect(() => {
     if (user) {
       Promise.all([
-        axios.get(`/api/kayitlar/ogrenci/${user.id}?rol=OGRENCI`),
+        axios.get(`/api/kayitlar/ogrenci/1?rol=OGRENCI`), // Sabit öğrenci ID'si
         axios.get('/api/dersler?rol=OGRENCI'),
-        axios.get(`/api/notlar/ogrenci/${user.id}?rol=OGRENCI`)
+        axios.get(`/api/notlar/ogrenci/1?rol=OGRENCI`) // Sabit öğrenci ID'si
       ]).then(([derslerRes, tumDerslerRes, notlarRes]) => {
         setDersler(derslerRes.data.data || []);
         setTumDersler(tumDerslerRes.data.data || []);
         setNotlar(notlarRes.data.data || []);
+        
+        // Stats güncelle
+        setStats([
+          { label: 'Kayıtlı Dersler', value: derslerRes.data.data?.length || 0, color: '#1976d2' },
+          { label: 'Toplam Ders', value: tumDerslerRes.data.data?.length || 0, color: '#388e3c' },
+          { label: 'Ortalama Not', value: notlarRes.data.data?.length || 0, color: '#fbc02d', textColor: '#333' },
+        ]);
       });
     }
   }, [user]);
@@ -67,16 +81,16 @@ export default function OgrenciDashboard() {
     setErrorMessage("");
     try {
       const response = await axios.post('/api/kayitlar?rol=OGRENCI', {
-        ogrenciId: user.id,
+        ogrenciId: 1, // Sabit öğrenci ID'si (ogrenciler tablosunda ID 1)
         dersId,
         danismanOgretmenId: null
       });
       setSuccessMessage(response.data.message || "Derse kayıt başarılı!");
       // Kayıt başarılıysa tüm verileri tekrar çek
       Promise.all([
-        axios.get(`/api/kayitlar/ogrenci/${user.id}?rol=OGRENCI`),
+        axios.get(`/api/kayitlar/ogrenci/1?rol=OGRENCI`), // Sabit öğrenci ID'si
         axios.get('/api/dersler?rol=OGRENCI'),
-        axios.get(`/api/notlar/ogrenci/${user.id}?rol=OGRENCI`)
+        axios.get(`/api/notlar/ogrenci/1?rol=OGRENCI`) // Sabit öğrenci ID'si
       ]).then(([derslerRes, tumDerslerRes, notlarRes]) => {
         setDersler(derslerRes.data.data || []);
         setTumDersler(tumDerslerRes.data.data || []);
@@ -101,6 +115,30 @@ export default function OgrenciDashboard() {
           <Typography>Rol: {user.rol}</Typography>
         </>
       )}
+      
+      {/* Stats Kartları */}
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <Grid container spacing={3}>
+          {stats.map((stat) => (
+            <Grid item xs={12} sm={4} key={stat.label}>
+              <Card sx={{ 
+                bgcolor: stat.color, 
+                color: stat.textColor || 'white',
+                textAlign: 'center'
+              }}>
+                <CardContent>
+                  <Typography variant="h4" component="div">
+                    {stat.value}
+                  </Typography>
+                  <Typography variant="body2">
+                    {stat.label}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
       <Box sx={{ mt: 4 }}>
         <Typography variant="h6">Kayıtlı Dersler ve Notlar</Typography>
         <TableContainer component={Paper} sx={{ mb: 4 }}>

@@ -28,27 +28,26 @@ public class Ders {
     private Integer kredi;
     
     @Column(name = "gun")
-    private String gun; // Pazartesi, Salı, vs.
+    private String gun;
     
     @Column(name = "saat")
-    private String saat; // 09:00-10:30
+    private String saat;
     
     @Column(name = "sinif")
-    private String sinif; // A101, B205
+    private String sinif;
     
     @Column(name = "ogretmen_id")
     private Long ogretmenId;
     
     @Column(name = "on_kosul_ders_id")
-    private Long onKosulDersId; // Ön koşul dersi varsa
+    private Long onKosulDersId;
     
     @Column(name = "min_ogrenci_sayisi")
-    private Integer minOgrenciSayisi; // Minimum öğrenci sayısı
+    private Integer minOgrenciSayisi;
     
     @Column(name = "durum")
-    private String durum; // "ACIK" veya "KAPALI"
+    private String durum;
 
-    // Getter ve Setter'lar
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

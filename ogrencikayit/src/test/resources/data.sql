@@ -1,11 +1,11 @@
 -- Admin
-INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('admin', '$2a$10$admin123hash', 'admin@mail.com', 'ADMIN', true);
+INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('admin', 'admin123', 'admin@mail.com', 'ADMIN', true);
 -- Öğretmenler
-INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('ogretmen1', '$2a$10$ogretmen123hash', 'ogretmen1@mail.com', 'OGRETMEN', true);
-INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('ogretmen2', '$2a$10$ogretmen123hash', 'ogretmen2@mail.com', 'OGRETMEN', true);
+INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('ogretmen1', 'ogretmen123', 'ogretmen1@mail.com', 'OGRETMEN', true);
+INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('ogretmen2', 'ogretmen123', 'ogretmen2@mail.com', 'OGRETMEN', true);
 -- Öğrenciler
-INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('ogrenci1', '$2a$10$ogrenci123hash', 'ogrenci1@mail.com', 'OGRENCI', true);
-INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('ogrenci2', '$2a$10$ogrenci123hash', 'ogrenci2@mail.com', 'OGRENCI', true);
+INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('ogrenci1', 'ogrenci123', 'ogrenci1@mail.com', 'OGRENCI', true);
+INSERT INTO kullanicilar (kullanici_adi, sifre, email, rol, aktif) VALUES ('ogrenci2', 'ogrenci123', 'ogrenci2@mail.com', 'OGRENCI', true);
 INSERT INTO ogrenciler (ogrenci_no, ad, soyad, email, telefon) VALUES ('2023001', 'Ali', 'Yılmaz', 'ogrenci1@mail.com', '5551111111');
 INSERT INTO ogrenciler (ogrenci_no, ad, soyad, email, telefon) VALUES ('2023002', 'Ayşe', 'Demir', 'ogrenci2@mail.com', '5552222222');
 -- Dersler

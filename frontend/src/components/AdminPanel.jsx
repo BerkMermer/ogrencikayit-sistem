@@ -3,17 +3,17 @@ import { Box, Grid, Card, CardContent, Typography, Container, Table, TableBody, 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios';
+import axios from '../utils/axios';
 
-const initialForm = { kullaniciAdi: '', email: '', sifre: '', rol: 'OGRENCI', aktif: true };
+const initialForm = { kullaniciAdi: '', email: '', sifre: '', rol: 'OGRENCI', aktif: true, ad: '', soyad: '' };
 
 export default function AdminPanel() {
-  // Dummy veriler, gerçek API'den alınabilir
-  const stats = [
-    { label: 'Toplam Öğrenci', value: 120, color: '#1976d2' },
-    { label: 'Toplam Öğretmen', value: 15, color: '#388e3c' },
-    { label: 'Toplam Ders', value: 32, color: '#fbc02d', textColor: '#333' },
-  ];
+  // Gerçek veriler için state
+  const [stats, setStats] = useState([
+    { label: 'Toplam Öğrenci', value: 0, color: '#1976d2' },
+    { label: 'Toplam Öğretmen', value: 0, color: '#388e3c' },
+    { label: 'Toplam Ders', value: 0, color: '#fbc02d', textColor: '#333' },
+  ]);
 
   // Kullanıcı yönetimi state'leri
   const [users, setUsers] = useState([]);
@@ -39,7 +39,25 @@ export default function AdminPanel() {
 
   useEffect(() => {
     fetchUsers();
+    fetchStats();
   }, []);
+
+  const fetchStats = () => {
+    axios.get('/api/dashboard/stats?rol=ADMIN')
+      .then(res => {
+        if (res.data.success) {
+          const data = res.data.data;
+          setStats([
+            { label: 'Toplam Öğrenci', value: data.toplamOgrenci || 0, color: '#1976d2' },
+            { label: 'Toplam Öğretmen', value: data.toplamOgretmen || 0, color: '#388e3c' },
+            { label: 'Toplam Ders', value: data.toplamDers || 0, color: '#fbc02d', textColor: '#333' },
+          ]);
+        }
+      })
+      .catch(err => {
+        console.error('İstatistikler yüklenemedi:', err);
+      });
+  };
 
   const handleOpen = (user = null) => {
     if (user) {
@@ -48,7 +66,9 @@ export default function AdminPanel() {
         email: user.email,
         sifre: '',
         rol: user.rol,
-        aktif: user.aktif
+        aktif: user.aktif,
+        ad: user.ad || '',
+        soyad: user.soyad || ''
       });
       setEditId(user.id);
     } else {
@@ -73,8 +93,8 @@ export default function AdminPanel() {
   };
 
   const handleSubmit = async () => {
-    if (!form.kullaniciAdi || !form.email || (!editId && !form.sifre)) {
-      setFormError('Kullanıcı adı, e-posta ve (eklemede) şifre zorunlu!');
+    if (!form.kullaniciAdi || !form.email || !form.ad || !form.soyad || (!editId && !form.sifre)) {
+      setFormError('Kullanıcı adı, ad, soyad, e-posta ve (eklemede) şifre zorunlu!');
       return;
     }
     try {
@@ -91,7 +111,9 @@ export default function AdminPanel() {
           sifre: form.sifre,
           email: form.email,
           rol: form.rol,
-          aktif: form.aktif
+          aktif: form.aktif,
+          ad: form.ad,
+          soyad: form.soyad
         });
       }
       handleClose();
@@ -104,10 +126,11 @@ export default function AdminPanel() {
   const handleDelete = async (id) => {
     if (!window.confirm('Kullanıcı silinsin mi?')) return;
     try {
-      await axios.delete(`/api/kullanici/${id}`);
+      await axios.delete(`/api/kullanici/${id}?rol=ADMIN`);
       fetchUsers();
     } catch (err) {
       alert('Silme işlemi başarısız!');
+      console.error('Silme hatası:', err.response?.data);
     }
   };
 
@@ -141,6 +164,8 @@ export default function AdminPanel() {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
+                  <TableCell>Ad</TableCell>
+                  <TableCell>Soyad</TableCell>
                   <TableCell>Kullanıcı Adı</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Rol</TableCell>
@@ -152,6 +177,8 @@ export default function AdminPanel() {
                 {users.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell>{user.id}</TableCell>
+                    <TableCell>{user.ad || '-'}</TableCell>
+                    <TableCell>{user.soyad || '-'}</TableCell>
                     <TableCell>{user.kullaniciAdi}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.rol}</TableCell>
@@ -175,6 +202,24 @@ export default function AdminPanel() {
               label="Kullanıcı Adı"
               name="kullaniciAdi"
               value={form.kullaniciAdi}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Ad"
+              name="ad"
+              value={form.ad}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Soyad"
+              name="soyad"
+              value={form.soyad}
               onChange={handleChange}
               required
             />

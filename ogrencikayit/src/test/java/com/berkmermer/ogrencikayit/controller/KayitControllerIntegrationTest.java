@@ -31,18 +31,11 @@ public class KayitControllerIntegrationTest {
 
     @BeforeEach
     public void setupTestData() {
-        // Test verilerini oluştur ve ID'leri al
         jdbcTemplate.execute("INSERT INTO ogrenciler (ad, soyad, ogrenci_no, email) VALUES ('Test', 'Ogrenci', '2024001', 'test@test.com')");
         jdbcTemplate.execute("INSERT INTO dersler (ders_adi, ders_kodu, kredi, kontenjan, durum) VALUES ('Matematik', 'MAT101', 3, 30, 'ACIK')");
         
-        // Eklenen verilerin ID'lerini al
         testOgrenciId = jdbcTemplate.queryForObject("SELECT id FROM ogrenciler WHERE ogrenci_no = '2024001'", Long.class);
         testDersId = jdbcTemplate.queryForObject("SELECT id FROM dersler WHERE ders_kodu = 'MAT101'", Long.class);
-    }
-
-    @Test
-    public void contextLoads() {
-        // Spring context yükleme testi
     }
 
     @Test
@@ -81,7 +74,6 @@ public class KayitControllerIntegrationTest {
 
     @Test
     public void testOgrenciKayitIptal() throws Exception {
-        // Önce kayıt oluştur
         String kayitJson = """
             {
                 "ogrenciId": %d,
@@ -94,7 +86,6 @@ public class KayitControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(kayitJson));
 
-        // Sonra iptal et
         mockMvc.perform(delete("/kayitlar/1")
             .param("rol", "OGRENCI"))
             .andExpect(status().isOk())

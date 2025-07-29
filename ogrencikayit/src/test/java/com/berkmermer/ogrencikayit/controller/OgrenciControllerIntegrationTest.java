@@ -30,16 +30,9 @@ public class OgrenciControllerIntegrationTest {
 
     @BeforeEach
     public void setupTestData() {
-        // Test verilerini oluştur ve ID'yi al
         jdbcTemplate.execute("INSERT INTO ogrenciler (ad, soyad, ogrenci_no, email, telefon) VALUES ('Test', 'Ogrenci', '2024001', 'test@test.com', '5551234567')");
         
-        // Eklenen öğrencinin ID'sini al
         testOgrenciId = jdbcTemplate.queryForObject("SELECT id FROM ogrenciler WHERE ogrenci_no = '2024001'", Long.class);
-    }
-
-    @Test
-    public void contextLoads() {
-        // Spring context yükleme testi
     }
 
     @Test

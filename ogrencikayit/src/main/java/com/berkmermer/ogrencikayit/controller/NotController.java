@@ -17,13 +17,11 @@ public class NotController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Not>>> tumNotlar(@RequestParam(required = false) String rol) {
-        // Rol kontrolü
         if (rol == null || rol.isEmpty()) {
             return ResponseEntity.badRequest()
                 .body(new ApiResponse<>(false, "Rol parametresi gerekli", null));
         }
         
-        // Sadece ADMIN ve OGRETMEN tüm notları görebilir
         if (!rol.equals("ADMIN") && !rol.equals("OGRETMEN")) {
             return ResponseEntity.status(403)
                 .body(new ApiResponse<>(false, "Bu işlem için yetkiniz yok", null));
@@ -40,13 +38,11 @@ public class NotController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<String>> notEkle(@RequestBody Not not, @RequestParam(required = false) String rol) {
-        // Rol kontrolü
         if (rol == null || rol.isEmpty()) {
             return ResponseEntity.badRequest()
                 .body(new ApiResponse<>(false, "Rol parametresi gerekli", null));
         }
         
-        // Sadece OGRETMEN not ekleyebilir
         if (!rol.equals("OGRETMEN")) {
             return ResponseEntity.status(403)
                 .body(new ApiResponse<>(false, "Bu işlem için yetkiniz yok", null));
@@ -63,13 +59,11 @@ public class NotController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> notGuncelle(@PathVariable Long id, @RequestBody Not not, @RequestParam(required = false) String rol) {
-        // Rol kontrolü
         if (rol == null || rol.isEmpty()) {
             return ResponseEntity.badRequest()
                 .body(new ApiResponse<>(false, "Rol parametresi gerekli", null));
         }
         
-        // Sadece OGRETMEN not güncelleyebilir
         if (!rol.equals("OGRETMEN")) {
             return ResponseEntity.status(403)
                 .body(new ApiResponse<>(false, "Bu işlem için yetkiniz yok", null));
@@ -87,13 +81,11 @@ public class NotController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> notSil(@PathVariable Long id, @RequestParam(required = false) String rol) {
-        // Rol kontrolü
         if (rol == null || rol.isEmpty()) {
             return ResponseEntity.badRequest()
                 .body(new ApiResponse<>(false, "Rol parametresi gerekli", null));
         }
         
-        // Sadece OGRETMEN not silebilir
         if (!rol.equals("OGRETMEN")) {
             return ResponseEntity.status(403)
                 .body(new ApiResponse<>(false, "Bu işlem için yetkiniz yok", null));
@@ -110,13 +102,11 @@ public class NotController {
 
     @GetMapping("/ogrenci/{ogrenciId}")
     public ResponseEntity<ApiResponse<List<Not>>> ogrencininNotlari(@PathVariable Long ogrenciId, @RequestParam(required = false) String rol) {
-        // Rol kontrolü
         if (rol == null || rol.isEmpty()) {
             return ResponseEntity.badRequest()
                 .body(new ApiResponse<>(false, "Rol parametresi gerekli", null));
         }
         
-        // Sadece OGRENCI, OGRETMEN ve ADMIN notları görebilir
         if (!rol.equals("OGRENCI") && !rol.equals("OGRETMEN") && !rol.equals("ADMIN")) {
             return ResponseEntity.status(403)
                 .body(new ApiResponse<>(false, "Bu işlem için yetkiniz yok", null));
@@ -133,13 +123,11 @@ public class NotController {
 
     @GetMapping("/ders/{dersId}")
     public ResponseEntity<ApiResponse<List<Not>>> dersinNotlari(@PathVariable Long dersId, @RequestParam(required = false) String rol) {
-        // Rol kontrolü
         if (rol == null || rol.isEmpty()) {
             return ResponseEntity.badRequest()
                 .body(new ApiResponse<>(false, "Rol parametresi gerekli", null));
         }
         
-        // Sadece OGRETMEN ve ADMIN ders notlarını görebilir
         if (!rol.equals("OGRETMEN") && !rol.equals("ADMIN")) {
             return ResponseEntity.status(403)
                 .body(new ApiResponse<>(false, "Bu işlem için yetkiniz yok", null));

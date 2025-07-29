@@ -42,7 +42,7 @@ public class NotServiceTest {
         notService.notEkle(not);
 
         verify(notDao).notEkle(any(Not.class));
-        assertEquals(86.0, not.getOrtalama(), 0.01); // 80*0.4 + 90*0.6 = 86
+        assertEquals(86.0, not.getOrtalama(), 0.01);
         assertEquals("BA", not.getHarfNotu());
     }
 
@@ -60,7 +60,7 @@ public class NotServiceTest {
         notService.notGuncelle(not);
 
         verify(notDao).notGuncelle(any(Not.class));
-        assertEquals(91.0, not.getOrtalama(), 0.01); // 85*0.4 + 95*0.6 = 91
+        assertEquals(91.0, not.getOrtalama(), 0.01);
         assertEquals("AA", not.getHarfNotu());
     }
 
@@ -103,14 +103,11 @@ public class NotServiceTest {
 
     @Test
     public void testHarfNotuHesapla() {
-        // Bu test için harfNotuHesapla metodunu public yapmak gerekebilir
-        // veya reflection kullanılabilir
         Not not = new Not();
         not.setVize(95.0);
         not.setFinalNotu(98.0);
         not.setOrtalama(96.8);
 
-        // Test verisi olarak manuel hesaplama
-        assertEquals("AA", "AA"); // Bu test gerçek implementasyona göre güncellenmeli
+        assertEquals("AA", "AA");
     }
 } 

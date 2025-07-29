@@ -14,7 +14,6 @@ public class DersService {
     @Autowired
     private KayitDao kayitDao;
 
-    // Tüm derslerin durumunu günceller
     public void dersDurumlariniGuncelle() {
         List<Ders> dersler = dersDao.findAll();
         for (Ders ders : dersler) {

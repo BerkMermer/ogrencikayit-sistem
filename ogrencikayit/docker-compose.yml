@@ -7,12 +7,39 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=default
-      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
-      - SPRING_DATASOURCE_USERNAME=sa
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_H2_CONSOLE_ENABLED=true
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ogrencikayit
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - db
+    networks:
+      - ogrenci-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    container_name: ogrenci-kayit-db
+    environment:
+      - POSTGRES_DB=ogrencikayit
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - ogrenci-network
+
+  frontend:
+    build: ../frontend
+    container_name: ogrenci-kayit-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - app
+    networks:
+      - ogrenci-network
     restart: unless-stopped
 
 volumes:

@@ -32,19 +32,6 @@ public class KayitController {
         
         List<Kayit> kayitlar = kayitDao.tumKayitlar();
         
-        // Eğer veritabanı boşsa test verileri ekle
-        if (kayitlar.isEmpty()) {
-            try {
-                kayitDao.kayitEkle(1L, 1L, "2024-2025", "ONAYLANDI", 1L);
-                kayitDao.kayitEkle(2L, 1L, "2024-2025", "BEKLIYOR", 1L);
-                kayitDao.kayitEkle(1L, 2L, "2024-2025", "ONAYLANDI", 1L);
-                kayitlar = kayitDao.tumKayitlar();
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse<>(false, "Test verileri eklenirken hata: " + e.getMessage(), null));
-            }
-        }
-        
         return ResponseEntity.ok(new ApiResponse<>(true, "Tüm kayıtlar getirildi", kayitlar));
     }
 
@@ -53,7 +40,10 @@ public class KayitController {
         if (!"OGRENCI".equals(rol)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse<>(false, "Sadece öğrenciler kayıt olabilir!", null));
         }
-        String sonuc = kayitService.ogrenciyiDerseKaydet(kayit.getOgrenciId(), kayit.getDersId(), "2024-2025", kayit.getDanismanOgretmenId());
+        
+        Long ogrenciId = kayit.getOgrenciId();
+        
+        String sonuc = kayitService.ogrenciyiDerseKaydet(ogrenciId, kayit.getDersId(), "2024-2025", kayit.getDanismanOgretmenId());
         if (!"Kayıt başarılı!".equals(sonuc)) {
             return ResponseEntity.badRequest().body(new ApiResponse<>(false, sonuc, null));
         }
@@ -83,6 +73,7 @@ public class KayitController {
         if (!"OGRENCI".equals(rol)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse<>(false, "Sadece öğrenciler kendi kayıtlarını görebilir!", null));
         }
+        
         List<Kayit> kayitlar = kayitDao.ogrencininDonemKayitlari(ogrenciId, "2024-2025");
         return ResponseEntity.ok(new ApiResponse<>(true, "Öğrenci kayıtları getirildi", kayitlar));
     }
@@ -132,6 +123,7 @@ public class KayitController {
         if (!"OGRENCI".equals(rol)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse<>(false, "Sadece öğrenciler kayıt kontrolü yapabilir!", null));
         }
+        
         boolean kayitliMi = kayitDao.ogrenciDerseKayitliMi(ogrenciId, dersId);
         return ResponseEntity.ok(new ApiResponse<>(true, "Kayıt kontrolü yapıldı", kayitliMi));
     }

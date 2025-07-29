@@ -37,7 +37,6 @@ public class OgrenciTest {
         ogrenci.setAd("Ahmet");
         ogrenci.setSoyad("Yılmaz");
         
-        // toString() metodu yoksa, en azından null olmamalı
         assertNotNull(ogrenci);
         assertEquals("Ahmet", ogrenci.getAd());
         assertEquals("Yılmaz", ogrenci.getSoyad());

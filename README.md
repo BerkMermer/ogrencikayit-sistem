@@ -1,102 +1,109 @@
 # Öğrenci Kayıt Sistemi
 
-Spring Boot 3 ile geliştirilmiş, öğrenci, ders, öğretmen, kayıt ve not yönetimi sağlayan, çok katmanlı ve güvenli bir RESTful API.
+Çok katmanlı mimariye sahip, Spring Boot (backend) ve React (frontend) ile geliştirilmiş, öğrenci, ders, öğretmen, kayıt ve not yönetimi sağlayan, güvenli ve modern bir web uygulaması.
 
 ## Özellikler
-
 - Öğrenci, ders, öğretmen, kayıt ve not işlemleri (CRUD)
-- Kullanıcı girişi (login), kayıt olma (register), şifre sıfırlama
+- Kullanıcı girişi, kayıt olma, şifre sıfırlama
 - Rol ve yetki kontrolü (Öğrenci, Öğretmen, Admin)
 - Spring Security ile şifre hashleme
-- PostgreSQL ve H2 desteği
-- Docker ve Kubernetes ile dağıtım desteği
+- **PostgreSQL (ana veritabanı), H2 (sadece testler için)**
+- Docker ve Kubernetes ile dağıtım
 - Unit ve integration testler
+- Modern React arayüzü
 
-## Teknolojiler
+## Mimarî
+```
+Kullanıcı
+   │
+Frontend (React)
+   │ REST API
+Backend (Spring Boot)
+   │
+PostgreSQL
+```
 
-- Java 17
-- Spring Boot 3.5.3
-- Spring Data JPA & JDBC
-- Spring Security
-- PostgreSQL / H2
-- Maven
+## Klasör Yapısı
+```
+frontend/         # React arayüzü
+ogrencikayit/     # Spring Boot backend ve k8s dosyaları
+```
 
-## Kurulum
+## Kurulum ve Çalıştırma
 
-1. **Veritabanı Oluşturma**
-   - PostgreSQL'de `ogrencikayit_yeni` adında bir veritabanı oluşturun.
-2. **Veritabanı Ayarları**
-   - `src/main/resources/application.properties` dosyasındaki veritabanı bağlantı bilgilerini güncelleyin.
-3. **Projeyi Başlatma**
+### 1. Veritabanı Oluşturma
+- PostgreSQL'de `ogrencikayit_yeni` adında bir veritabanı oluşturun.
+
+### 2. Backend (Spring Boot)
+- `ogrencikayit/src/main/resources/application.properties` dosyasındaki veritabanı bağlantı bilgilerini güncelleyin.
+- Proje kökünde:
+  ```bash
+  cd ogrencikayit
+  mvn spring-boot:run
+  ```
+
+### 3. Frontend (React)
+- `frontend` klasöründe:
+  ```bash
+  npm install
+  npm run dev
+  ```
+- Varsayılan olarak [http://localhost:5173](http://localhost:5173) adresinde çalışır.
+
+## Docker ile Çalıştırma
+
+1. Proje kökünde Docker imajı oluşturun:
    ```bash
-   mvn spring-boot:run
+   docker build -t ogrenci-kayit:latest .
    ```
-   veya IntelliJ IDEA ile `OgrencikayitApplication.java` dosyasını çalıştırın.
+2. Docker Compose veya manuel olarak PostgreSQL ve uygulamayı başlatabilirsiniz.
 
-## API Endpointleri
+## Kubernetes ile Dağıtım
 
-### Kimlik Doğrulama ve Kullanıcı Yönetimi
+1. `ogrencikayit/k8s` dizinine gidin:
+   ```bash
+   cd ogrencikayit/k8s
+   chmod +x deploy.sh
+   ./deploy.sh
+   ```
+2. Tüm adımlar ve detaylar için `ogrencikayit/k8s/README.md` dosyasına bakabilirsiniz.
 
+## API Endpointleri (Özet)
 - `POST /api/kullanici/login` — Kullanıcı girişi
 - `POST /api/kullanici/register` — Kayıt olma
-- `POST /api/kullanici/forgot-password` — Şifre sıfırlama token'ı oluşturma
-- `POST /api/kullanici/reset-password` — Şifreyi sıfırlama
-- `GET /api/kullanici/rol/{kullaniciAdi}` — Kullanıcı rolünü sorgulama
-
-### Öğrenci
 - `GET /api/ogrenciler` — Tüm öğrenciler (rol kontrolü ile)
-- `POST /api/ogrenciler` — Yeni öğrenci ekle
-- `PUT /api/ogrenciler/{id}` — Öğrenci güncelle
-- `DELETE /api/ogrenciler/{id}` — Öğrenci sil
-
-### Ders
 - `GET /api/dersler` — Tüm dersler (rol kontrolü ile)
-- `POST /api/dersler` — Yeni ders ekle
-- `PUT /api/dersler/{id}` — Ders güncelle
-- `DELETE /api/dersler/{id}` — Ders sil
-
-### Kayıt ve Not
-- `GET /api/kayitlar` — Kayıt listesi
-- `POST /api/kayitlar` — Kayıt ekle
-- `GET /api/notlar` — Not listesi
-- `POST /api/notlar` — Not ekle/güncelle
-
-### Dashboard
 - `GET /api/dashboard` — Genel istatistikler
 
-## Proje Yapısı
-
-```
-src/main/java/com/berkmermer/ogrencikayit/
-├── controller/     # REST Controllers (API endpointleri)
-├── dao/            # Data Access Objects (JDBC/JPA)
-├── model/          # Entity modelleri
-├── service/        # İş mantığı (business logic)
-├── config/         # Güvenlik ve genel konfigürasyonlar
-└── OgrencikayitApplication.java # Ana uygulama dosyası
-```
-
 ## Testler
-
-- Unit ve integration testler `src/test/java/com/berkmermer/ogrencikayit/` altında bulunur.
-- Test veritabanı olarak H2 kullanılır.
-
-## Gelişmiş Özellikler
-
-- Şifreler BCrypt ile hash'lenir.
-- Rol bazlı erişim kontrolü (endpointlerde yetki kontrolü)
-- Şifre sıfırlama için token üretimi (gerçek projede e-posta ile gönderim önerilir)
-- Docker ve Kubernetes ile kolay dağıtım
+- Backend testleri: `ogrencikayit/src/test/java/com/berkmermer/ogrencikayit/`
+- Test veritabanı: **H2 (sadece testler için)**
+- Çalıştırmak için:
+  ```bash
+  cd ogrencikayit
+  mvn test
+  ```
 
 ## Katkı ve Geliştirme
-
 - Pull request ve issue açabilirsiniz.
-- Frontend (React) entegrasyonu için API endpointleri hazırdır.
+- Frontend (React) ve backend (Spring Boot) için katkılar memnuniyetle karşılanır.
 
 ## Lisans
-
 MIT
 
 ---
+**Not:** Proje gerçek bir okul ortamında kullanılacaksa, şifre sıfırlama ve e-posta gönderimi için ek güvenlik önlemleri alınmalıdır. 
 
-**Not:** Proje, gerçek bir okul ortamında kullanılacaksa, şifre sıfırlama ve e-posta gönderimi için ek güvenlik önlemleri alınmalıdır. 
+## Ekran Görüntüleri
+
+Ana Panel:
+![Ana Panel](screenshots/ana%20panel.png)
+
+Giriş Paneli:
+![Giriş Paneli](screenshots/giriş%20paneli.png)
+
+Admin Paneli:
+![Admin Paneli](screenshots/admin%20paneli.png)
+
+Yardım ve Destek:
+![Yardım ve Destek](screenshots/yardım%20ve%20destek.png) 

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ogrenci-kayit-frontend
+  namespace: ogrenci-kayit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ogrenci-kayit-frontend
+  template:
+    metadata:
+      labels:
+        app: ogrenci-kayit-frontend
+    spec:
+      containers:
+      - name: ogrenci-kayit-frontend
+        image: ogrenci-kayit-frontend:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ogrenci-kayit-frontend-service
+  namespace: ogrenci-kayit
+spec:
+  selector:
+    app: ogrenci-kayit-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer 

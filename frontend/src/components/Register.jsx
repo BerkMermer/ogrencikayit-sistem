@@ -8,7 +8,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Alert from '@mui/material/Alert';
-import axios from 'axios';
+import axios from '../utils/axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
@@ -52,7 +52,8 @@ export default function Register() {
           soyad: form.surname,
           kullaniciAdi: form.username,
           email: form.email,
-          sifre: form.password
+          sifre: form.password,
+          rol: "OGRENCI"
         };
         await axios.post('/api/kullanici/register', payload);
         setApiSuccess('Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...');

@@ -3,18 +3,11 @@ import { Box, Grid, Card, CardContent, Typography, Container, Table, TableBody, 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios';
+import axios from '../utils/axios';
 
 const initialForm = { ad: '', kredi: '' };
 
 export default function OgretmenPanel() {
-  // Dummy veriler, gerçek API'den alınabilir
-  const stats = [
-    { label: 'Toplam Ders', value: 8, color: '#1976d2' },
-    { label: 'Toplam Öğrenci', value: 75, color: '#388e3c' },
-    { label: 'Toplam Not', value: 210, color: '#fbc02d', textColor: '#333' },
-  ];
-
   // Ders yönetimi state'leri
   const [dersler, setDersler] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +16,11 @@ export default function OgretmenPanel() {
   const [form, setForm] = useState(initialForm);
   const [editId, setEditId] = useState(null);
   const [formError, setFormError] = useState('');
+  const [stats, setStats] = useState([
+    { label: 'Toplam Ders', value: 0, color: '#1976d2' },
+    { label: 'Toplam Öğrenci', value: 0, color: '#388e3c' },
+    { label: 'Toplam Not', value: 0, color: '#fbc02d', textColor: '#333' }
+  ]);
 
   const fetchDersler = () => {
     setLoading(true);
@@ -39,7 +37,25 @@ export default function OgretmenPanel() {
 
   useEffect(() => {
     fetchDersler();
+    fetchStats();
   }, []);
+
+  const fetchStats = () => {
+    axios.get('/api/dashboard/stats?rol=OGRETMEN')
+      .then(res => {
+        if (res.data.success) {
+          const data = res.data.data;
+          setStats([
+            { label: 'Toplam Ders', value: data.toplamDers || 0, color: '#1976d2' },
+            { label: 'Toplam Öğrenci', value: data.toplamOgrenci || 0, color: '#388e3c' },
+            { label: 'Toplam Not', value: 0, color: '#fbc02d', textColor: '#333' },
+          ]);
+        }
+      })
+      .catch(err => {
+        console.error('İstatistikler yüklenemedi:', err);
+      });
+  };
 
   const handleOpen = (ders = null) => {
     if (ders) {

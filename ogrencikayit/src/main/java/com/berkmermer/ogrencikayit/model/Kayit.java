@@ -17,13 +17,13 @@ public class Kayit {
     private Long dersId;
 
     @Column(name = "donem", nullable = true)
-    private String donem; // Örn: 2023-2024 Güz
+    private String donem;
     
     @Column(name = "durum", nullable = true)
-    private String onayDurumu; // BEKLIYOR, ONAYLANDI, REDDEDILDI
+    private String onayDurumu;
     
     @Column(name = "danisman_ogretmen_id")
-    private Long danismanOgretmenId; // İsteğe bağlı: öğrencinin danışman öğretmeni
+    private Long danismanOgretmenId;
 
     public Long getId() {
         return id;

@@ -85,7 +85,7 @@ public class KayitServiceTest {
         when(ogrenciDao.findById(1L)).thenReturn(ogrenci);
         when(dersDao.findById(1L)).thenReturn(ders);
         when(kayitDao.ogrenciDerseKayitliMi(1L, 1L)).thenReturn(false);
-        when(kayitDao.derseKayitliOgrenciSayisi(1L)).thenReturn(30); // Kontenjan dolu
+        when(kayitDao.derseKayitliOgrenciSayisi(1L)).thenReturn(30);
 
         String result = kayitService.ogrenciyiDerseKaydet(1L, 1L, "2025-1", 1L);
 
@@ -122,14 +122,14 @@ public class KayitServiceTest {
         Ders ders = new Ders();
         ders.setId(1L);
         ders.setKapasite(30);
-        ders.setKredi(15); // Yüksek kredi
+        ders.setKredi(15);
         ders.setDurum("AKTIF");
 
         when(ogrenciDao.findById(1L)).thenReturn(ogrenci);
         when(dersDao.findById(1L)).thenReturn(ders);
         when(kayitDao.ogrenciDerseKayitliMi(1L, 1L)).thenReturn(false);
-        when(kayitDao.derseKayitliOgrenciSayisi(1L)).thenReturn(25);
-        when(kayitDao.ogrencininToplamKredisi(1L)).thenReturn(20); // Mevcut kredi
+        when(kayitDao.derseKayitliOgrenciSayisi(1L)).thenReturn(30);
+        when(kayitDao.ogrencininToplamKredisi(1L)).thenReturn(20);
 
         String result = kayitService.ogrenciyiDerseKaydet(1L, 1L, "2025-1", 1L);
 

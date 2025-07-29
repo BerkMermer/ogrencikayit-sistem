@@ -31,7 +31,7 @@ public class Not {
     private Long girenOgretmenId;
     
     @Column(name = "tarih")
-    private String tarih; // veya LocalDate
+    private String tarih;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

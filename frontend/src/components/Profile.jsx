@@ -42,8 +42,6 @@ export default function Profile() {
       });
       setSnackbar({ open: true, message: 'Profil başarıyla güncellendi.', severity: 'success' });
       setEditMode(false);
-      // localStorage güncelle
-      localStorage.setItem('user', JSON.stringify({ ...user, kullaniciAdi: form.kullaniciAdi, email: form.email }));
     } catch (err) {
       setSnackbar({ open: true, message: err.response?.data?.message || 'Güncelleme başarısız!', severity: 'error' });
     } finally {

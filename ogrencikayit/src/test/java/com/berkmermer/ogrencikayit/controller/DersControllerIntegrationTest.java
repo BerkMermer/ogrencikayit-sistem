@@ -30,16 +30,9 @@ public class DersControllerIntegrationTest {
 
     @BeforeEach
     public void setupTestData() {
-        // Test verilerini oluştur ve ID'yi al
         jdbcTemplate.execute("INSERT INTO dersler (ders_adi, ders_kodu, kredi, ogretmen_adi, kontenjan, durum) VALUES ('Matematik', 'MAT101', 3, 'Dr. Ahmet', 30, 'ACIK')");
         
-        // Eklenen dersin ID'sini al
         testDersId = jdbcTemplate.queryForObject("SELECT id FROM dersler WHERE ders_kodu = 'MAT101'", Long.class);
-    }
-
-    @Test
-    public void contextLoads() {
-        // Spring context yükleme testi
     }
 
     @Test
@@ -53,7 +46,6 @@ public class DersControllerIntegrationTest {
 
     @Test
     public void testTumDersleriGetirOgrenciRol() throws Exception {
-        // OGRENCI rolü dersleri görebilir
         mockMvc.perform(get("/dersler")
             .param("rol", "OGRENCI"))
             .andExpect(status().isOk())
@@ -62,7 +54,6 @@ public class DersControllerIntegrationTest {
 
     @Test
     public void testTumDersleriGetirYanlisRol() throws Exception {
-        // Geçersiz bir rol ile test et
         mockMvc.perform(get("/dersler")
             .param("rol", "YONETICI"))
             .andExpect(status().isForbidden());
@@ -78,7 +69,6 @@ public class DersControllerIntegrationTest {
 
     @Test
     public void testDersGetirByIdOgrenciRol() throws Exception {
-        // OGRENCI rolü ders detaylarını görebilir
         mockMvc.perform(get("/dersler/" + testDersId)
             .param("rol", "OGRENCI"))
             .andExpect(status().isOk())
@@ -87,7 +77,6 @@ public class DersControllerIntegrationTest {
 
     @Test
     public void testDersGetirByIdYanlisRol() throws Exception {
-        // Geçersiz bir rol ile test et
         mockMvc.perform(get("/dersler/" + testDersId)
             .param("rol", "YONETICI"))
             .andExpect(status().isForbidden());

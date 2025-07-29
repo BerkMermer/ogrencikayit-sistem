@@ -41,7 +41,11 @@ public class DersDao {
     }
 
     public Ders findById(Long id) {
+        try {
         return jdbcTemplate.queryForObject("SELECT * FROM dersler WHERE id = ?", rowMapper, id);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void save(Ders ders) {
@@ -55,19 +59,8 @@ public class DersDao {
     }
 
     public void delete(Long id) {
-        // Önce kayıtları sil (eğer kayıt tablosu varsa)
-        try {
-            jdbcTemplate.update("DELETE FROM kayitlar WHERE ders_id = ?", id);
-        } catch (Exception e) {
-            // Kayıt tablosu yoksa devam et
-        }
-        // Sonra notları sil
-        try {
-            jdbcTemplate.update("DELETE FROM notlar WHERE ders_id = ?", id);
-        } catch (Exception e) {
-            // Not tablosu yoksa devam et
-        }
-        // En son dersi sil
+        jdbcTemplate.update("DELETE FROM kayitlar WHERE ders_id = ?", id);
+        jdbcTemplate.update("DELETE FROM notlar WHERE ders_id = ?", id);
         jdbcTemplate.update("DELETE FROM dersler WHERE id = ?", id);
     }
 

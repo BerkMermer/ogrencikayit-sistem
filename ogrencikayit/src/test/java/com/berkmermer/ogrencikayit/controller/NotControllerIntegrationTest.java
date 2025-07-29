@@ -27,15 +27,9 @@ public class NotControllerIntegrationTest {
 
     @BeforeEach
     public void setupTestData() {
-        // Test verilerini oluştur - sadece gerekli alanları ekle
         jdbcTemplate.execute("INSERT INTO ogrenciler (ad, soyad, ogrenci_no) VALUES ('Test', 'Ogrenci', '2024001')");
         jdbcTemplate.execute("INSERT INTO dersler (ders_adi, kredi) VALUES ('Matematik', 3)");
         jdbcTemplate.execute("INSERT INTO notlar (ogrenci_id, ders_id, vize, final_notu) VALUES (1, 1, 80.0, 85.0)");
-    }
-
-    @Test
-    public void contextLoads() {
-        // Bu test sadece Spring context'inin başarıyla yüklenip yüklenmediğini kontrol eder
     }
 
     @Test
@@ -58,7 +52,6 @@ public class NotControllerIntegrationTest {
 
     @Test
     public void testOgrenciNotlariniGetirYanlisRol() throws Exception {
-        // OGRENCI rolü olmayan bir rol ile test et (örneğin: YONETICI)
         mockMvc.perform(get("/notlar/ogrenci/1")
             .param("rol", "YONETICI"))
             .andExpect(status().isForbidden());
@@ -66,7 +59,6 @@ public class NotControllerIntegrationTest {
 
     @Test
     public void testDersNotlariniGetirYanlisRol() throws Exception {
-        // OGRETMEN rolü olmayan bir rol ile test et (örneğin: OGRENCI)
         mockMvc.perform(get("/notlar/ders/1")
             .param("rol", "OGRENCI"))
             .andExpect(status().isForbidden());
@@ -118,7 +110,6 @@ public class NotControllerIntegrationTest {
 
     @Test
     public void testOgrenciNotlariniGetirOgretmenRol() throws Exception {
-        // OGRETMEN rolü öğrenci notlarını görebilir
         mockMvc.perform(get("/notlar/ogrenci/1")
             .param("rol", "OGRETMEN"))
             .andExpect(status().isOk())

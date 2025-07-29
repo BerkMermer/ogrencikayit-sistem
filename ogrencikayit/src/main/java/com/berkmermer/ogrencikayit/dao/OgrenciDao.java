@@ -23,7 +23,8 @@ public class OgrenciDao {
             o.setSoyad(rs.getString("soyad"));
             o.setOgrenciNo(rs.getString("ogrenci_no"));
             o.setEmail(rs.getString("email"));
-            o.setTelefon(rs.getString("telefon"));
+            String telefon = rs.getString("telefon");
+            o.setTelefon(telefon != null ? telefon : "");
             return o;
         }
     };
@@ -33,7 +34,16 @@ public class OgrenciDao {
     }
 
     public Ogrenci findById(Long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM ogrenciler WHERE id = ?", rowMapper, id);
+        try {
+            System.out.println("OgrenciDao.findById çağrıldı, ID: " + id);
+            Ogrenci ogrenci = jdbcTemplate.queryForObject("SELECT * FROM ogrenciler WHERE id = ?", rowMapper, id);
+            System.out.println("Öğrenci bulundu: " + (ogrenci != null ? ogrenci.getAd() : "null"));
+            return ogrenci;
+        } catch (Exception e) {
+            System.out.println("OgrenciDao.findById hatası: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void save(Ogrenci ogrenci) {
@@ -51,19 +61,8 @@ public class OgrenciDao {
     }
 
     public void delete(Long id) {
-        // Önce kayıtları sil (eğer kayıt tablosu varsa)
-        try {
-            jdbcTemplate.update("DELETE FROM kayitlar WHERE ogrenci_id = ?", id);
-        } catch (Exception e) {
-            // Kayıt tablosu yoksa devam et
-        }
-        // Sonra notları sil
-        try {
-            jdbcTemplate.update("DELETE FROM notlar WHERE ogrenci_id = ?", id);
-        } catch (Exception e) {
-            // Not tablosu yoksa devam et
-        }
-        // En son öğrenciyi sil
+        jdbcTemplate.update("DELETE FROM kayitlar WHERE ogrenci_id = ?", id);
+        jdbcTemplate.update("DELETE FROM notlar WHERE ogrenci_id = ?", id);
         jdbcTemplate.update("DELETE FROM ogrenciler WHERE id = ?", id);
     }
 } 

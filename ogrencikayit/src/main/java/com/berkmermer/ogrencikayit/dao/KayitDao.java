@@ -56,29 +56,47 @@ public class KayitDao {
     }
 
     public boolean ogrenciDerseKayitliMi(Long ogrenciId, Long dersId) {
+        try {
         String sql = "SELECT COUNT(*) FROM kayitlar WHERE ogrenci_id = ? AND ders_id = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, ogrenciId, dersId);
-        return count > 0;
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, ogrenciId, dersId);
+            return count != null && count > 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public int derseKayitliOgrenciSayisi(Long dersId) {
+        try {
         String sql = "SELECT COUNT(*) FROM kayitlar WHERE ders_id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, dersId);
+            Integer result = jdbcTemplate.queryForObject(sql, Integer.class, dersId);
+            return result != null ? result : 0;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     public int ogrencininToplamKredisi(Long ogrenciId) {
+        try {
         String sql = "SELECT COALESCE(SUM(d.kredi), 0) FROM kayitlar kd " +
                     "JOIN dersler d ON kd.ders_id = d.id " +
                     "WHERE kd.ogrenci_id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, ogrenciId);
+            Integer result = jdbcTemplate.queryForObject(sql, Integer.class, ogrenciId);
+            return result != null ? result : 0;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     public boolean zamanCakismasiVarMi(Long ogrenciId, String gun, String saat) {
+        try {
         String sql = "SELECT COUNT(*) FROM kayitlar kd " +
                     "JOIN dersler d ON kd.ders_id = d.id " +
                     "WHERE kd.ogrenci_id = ? AND d.gun = ? AND d.saat = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, ogrenciId, gun, saat);
-        return count > 0;
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, ogrenciId, gun, saat);
+            return count != null && count > 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void ogrenciyiDerstenCikar(Long ogrenciId, Long dersId) {
