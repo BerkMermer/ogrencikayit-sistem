@@ -84,15 +84,6 @@ ogrencikayit/     # Spring Boot backend ve k8s dosyaları
   mvn test
   ```
 
-## Katkı ve Geliştirme
-- Pull request ve issue açabilirsiniz.
-- Frontend (React) ve backend (Spring Boot) için katkılar memnuniyetle karşılanır.
-
-## Lisans
-MIT
-
----
-**Not:** Proje gerçek bir okul ortamında kullanılacaksa, şifre sıfırlama ve e-posta gönderimi için ek güvenlik önlemleri alınmalıdır. 
 
 ## Ekran Görüntüleri
 
