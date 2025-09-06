@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  app:
+    image: ogrenci-kayit:latest
+    container_name: ogrenci-kayit-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ogrencikayit
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - db
+    networks:
+      - ogrenci-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    container_name: ogrenci-kayit-db
+    environment:
+      - POSTGRES_DB=ogrencikayit
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - ogrenci-network
+
+  frontend:
+    build: ../frontend
+    container_name: ogrenci-kayit-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - app
+    networks:
+      - ogrenci-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  ogrenci-network:
+    driver: bridge 
